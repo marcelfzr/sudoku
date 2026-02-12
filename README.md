@@ -2,6 +2,9 @@
 
 A clean, fast Sudoku web app with daily puzzles. Built for both mobile and desktop.
 
+![Home-Screen Screenshot](assets/homepage.png)
+![Play-Screen Screenshot](assets/sudoku.png)
+
 ## Features
 
 - **Daily Puzzles** - One unique puzzle every day, seeded by date
