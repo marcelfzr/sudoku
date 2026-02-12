@@ -5,6 +5,7 @@ const SETTINGS_KEY = 'sudoku:settings'
 const STATS_KEY = 'sudoku:stats'
 
 const defaultSettings: AppSettings = {
+  themeMode: 'system',
   autoRemoveNotes: true,
   highlightPeers: true,
   autoCheckConflicts: true,
@@ -28,8 +29,10 @@ const safeParse = <T>(value: string | null, fallback: T): T => {
   }
 }
 
-export const loadSettings = (): AppSettings =>
-  safeParse<AppSettings>(localStorage.getItem(SETTINGS_KEY), defaultSettings)
+export const loadSettings = (): AppSettings => {
+  const parsed = safeParse<Partial<AppSettings>>(localStorage.getItem(SETTINGS_KEY), {})
+  return { ...defaultSettings, ...parsed }
+}
 
 export const saveSettings = (settings: AppSettings) => {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))

@@ -40,6 +40,7 @@ export type GameStats = {
 }
 
 export type AppSettings = {
+  themeMode: 'system' | 'light' | 'dark'
   autoRemoveNotes: boolean
   highlightPeers: boolean
   autoCheckConflicts: boolean

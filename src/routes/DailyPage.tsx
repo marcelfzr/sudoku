@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { GameToolbar } from '../components/GameToolbar'
 import { NumberPad } from '../components/NumberPad'
 import { SudokuBoard } from '../components/SudokuBoard'
@@ -23,11 +23,6 @@ export function DailyPage() {
     }
   }, [date, navigate, params.date])
 
-  const settings = useMemo(() => loadSettings(), [])
-  useEffect(() => {
-    document.body.dataset.theme = settings.highContrast ? 'contrast' : 'default'
-  }, [settings.highContrast])
-
   return <DailyGame key={date} date={date} />
 }
 
@@ -47,6 +42,18 @@ function DailyGame({ date }: DailyGameProps) {
     onPersist: saveStoredGame,
     onComplete: (elapsedSeconds) => markGameCompleted(date, elapsedSeconds),
   })
+
+  const disabledDigits = useMemo(() => {
+    const counts = new Array(10).fill(0)
+    for (const value of game.values) {
+      if (value > 0) counts[value] += 1
+    }
+    const done = new Set<number>()
+    for (let digit = 1; digit <= 9; digit += 1) {
+      if (counts[digit] >= 9) done.add(digit)
+    }
+    return done
+  }, [game.values])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -100,9 +107,6 @@ function DailyGame({ date }: DailyGameProps) {
       <div className="panel game-header">
         <div className="row">
           <h1>{date === formatDateKey(new Date()) ? 'Today' : date}</h1>
-          <Link to="/archive" className="button button-soft compact">
-            Archive
-          </Link>
         </div>
         <p className="muted">
           {puzzle.difficulty} · {puzzle.clueCount} clues
@@ -146,7 +150,11 @@ function DailyGame({ date }: DailyGameProps) {
       </div>
 
       <div className="sticky-input">
-        <NumberPad disabled={game.completed} onInput={(value) => game.applyInput(value as CellValue)} />
+        <NumberPad
+          disabled={game.completed}
+          disabledDigits={disabledDigits}
+          onInput={(value) => game.applyInput(value as CellValue)}
+        />
       </div>
     </section>
   )

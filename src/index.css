@@ -14,20 +14,43 @@
   --selected: #d7e2ff;
 }
 
-body[data-theme='contrast'] {
-  --bg: #f9fafb;
-  --surface: #ffffff;
-  --surface-soft: #eef1f5;
+:root[data-theme='dark'] {
+  --bg: #0b111a;
+  --surface: #131c29;
+  --surface-soft: #1a2737;
+  --text: #eaf0ff;
+  --muted: #9aa7bd;
+  --line: #2a3a51;
+  --accent: #7f9dff;
+  --accent-soft: #21345f;
+  --danger: #ff7d7d;
+  --success: #49d88a;
+  --peer: #1b2b40;
+  --same: #22355a;
+  --selected: #2d4571;
+}
+
+:root[data-contrast='true'] {
   --text: #0f172a;
-  --muted: #3f4b5e;
-  --line: #b4bfcc;
-  --accent: #2349d8;
-  --accent-soft: #dbe5ff;
-  --danger: #b52d2d;
-  --success: #0c763c;
-  --peer: #e7edf9;
-  --same: #dae6ff;
-  --selected: #c5d5ff;
+  --muted: #334155;
+  --line: #9eacbf;
+  --accent: #1f4ae0;
+  --accent-soft: #d8e3ff;
+  --danger: #aa2323;
+  --success: #066b38;
+}
+
+:root[data-theme='dark'][data-contrast='true'] {
+  --text: #f5f8ff;
+  --muted: #ced7eb;
+  --line: #445777;
+  --accent: #9eb4ff;
+  --accent-soft: #2a3f67;
+  --danger: #ff9a9a;
+  --success: #72f2af;
+  --peer: #263a58;
+  --same: #304874;
+  --selected: #395684;
 }
 
 *,
@@ -60,6 +83,12 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+  min-height: 100svh;
+}
+
+:root[data-theme='dark'] body {
+  color-scheme: dark;
 }
 
 a {
@@ -210,6 +239,33 @@ h2 {
   gap: 0.5rem;
 }
 
+.theme-picker {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 0.7rem;
+  background: var(--surface-soft);
+}
+
+.theme-options {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.theme-options button {
+  min-height: 2.4rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.theme-options button.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .setting-row {
   display: flex;
   align-items: center;
@@ -355,10 +411,15 @@ h2 {
 
 .game-toolbar button {
   min-height: 2.75rem;
+  aspect-ratio: 1 / 1;
   border: 1px solid var(--line);
   border-radius: 0.75rem;
   background: var(--surface-soft);
   color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .game-toolbar button.active {
@@ -397,7 +458,10 @@ h2 {
 }
 
 .number-key:disabled {
-  opacity: 0.45;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 70%, var(--line));
+  border-color: color-mix(in srgb, var(--line) 80%, transparent);
+  opacity: 0.6;
 }
 
 button:focus-visible,

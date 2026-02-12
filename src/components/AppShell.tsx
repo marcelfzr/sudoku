@@ -1,7 +1,25 @@
+import { useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import type { PropsWithChildren } from 'react'
+import { loadSettings } from '../lib/storage/storage'
+import { applyThemeFromSettings } from '../lib/theme'
 
 export function AppShell({ children }: PropsWithChildren) {
+  useEffect(() => {
+    const settings = loadSettings()
+    applyThemeFromSettings(settings)
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = () => {
+      const latest = loadSettings()
+      if (latest.themeMode === 'system') {
+        applyThemeFromSettings(latest)
+      }
+    }
+    media.addEventListener('change', onChange)
+    return () => media.removeEventListener('change', onChange)
+  }, [])
+
   return (
     <div className="app-shell">
       <header className="app-header">
