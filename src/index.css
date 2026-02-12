@@ -318,6 +318,10 @@ h2 {
   grid-template-columns: 1fr;
 }
 
+.controls-panel {
+  width: fit-content;
+}
+
 .board-panel {
   padding: 0.6rem;
 }
@@ -413,13 +417,16 @@ h2 {
 .game-toolbar {
   position: sticky;
   top: 0.6rem;
+  --toolbar-btn: 2.5rem;
+  --toolbar-icon: 1.1rem;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.5rem;
 }
 
 .game-toolbar button {
-  min-height: 2.75rem;
+  min-height: var(--toolbar-btn);
+  width: var(--toolbar-btn);
   aspect-ratio: 1 / 1;
   border: 1px solid var(--line);
   border-radius: 0.75rem;
@@ -429,6 +436,16 @@ h2 {
   align-items: center;
   justify-content: center;
   padding: 0;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.game-toolbar svg {
+  width: var(--toolbar-icon);
+  height: var(--toolbar-icon);
 }
 
 .game-toolbar button.active {
@@ -439,10 +456,12 @@ h2 {
 .game-toolbar button.attention {
   border-color: color-mix(in srgb, var(--danger) 45%, var(--line));
   background: color-mix(in srgb, var(--danger) 12%, var(--surface-soft));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 18%, transparent);
 }
 
 .game-toolbar button:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .sticky-input {
@@ -469,6 +488,7 @@ h2 {
   background: var(--surface);
   font-size: 1.05rem;
   font-weight: 650;
+  cursor: pointer;
 }
 
 .number-key:disabled {
@@ -476,6 +496,7 @@ h2 {
   background: color-mix(in srgb, var(--surface) 70%, var(--line));
   border-color: color-mix(in srgb, var(--line) 80%, transparent);
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 button:focus-visible,
@@ -495,8 +516,12 @@ input:focus-visible {
   }
 
   .game-layout {
-    grid-template-columns: minmax(0, 1fr) 320px;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
+  }
+
+  .controls-panel {
+    justify-self: end;
   }
 
   .sticky-input {
@@ -507,5 +532,22 @@ input:focus-visible {
 
   .number-pad {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .controls-panel {
+    width: auto;
+  }
+
+  .game-toolbar {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    --toolbar-btn: 2.3rem;
+    --toolbar-icon: 1rem;
+  }
+
+  .number-key {
+    min-height: 3.6rem;
+    font-size: 1.15rem;
   }
 }

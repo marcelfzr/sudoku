@@ -151,14 +151,16 @@ export const useSudokuGame = ({
 
     if (settings.autoCheckConflicts && digit !== puzzle.solution[selectedIndex]) {
       next.mistakes += 1
-      setMistakeFlash(true)
-      if (mistakeFlashTimeoutRef.current !== null) {
-        window.clearTimeout(mistakeFlashTimeoutRef.current)
+      if (settings.highlightRecoveryActionsOnMistake) {
+        setMistakeFlash(true)
+        if (mistakeFlashTimeoutRef.current !== null) {
+          window.clearTimeout(mistakeFlashTimeoutRef.current)
+        }
+        mistakeFlashTimeoutRef.current = window.setTimeout(() => {
+          setMistakeFlash(false)
+          mistakeFlashTimeoutRef.current = null
+        }, 1200)
       }
-      mistakeFlashTimeoutRef.current = window.setTimeout(() => {
-        setMistakeFlash(false)
-        mistakeFlashTimeoutRef.current = null
-      }, 1200)
     }
 
     pushHistory(next)

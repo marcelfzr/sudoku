@@ -10,6 +10,7 @@ const defaultSettings: AppSettings = {
   autoRemoveNotes: true,
   highlightPeers: true,
   autoCheckConflicts: true,
+  highlightRecoveryActionsOnMistake: true,
   highContrast: false,
 }
 

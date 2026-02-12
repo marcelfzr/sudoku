@@ -10,6 +10,7 @@ const toggleSettingLabels: Record<
   autoRemoveNotes: 'Auto remove notes when entering a number',
   highlightPeers: 'Highlight row, column, and box for selected cell',
   autoCheckConflicts: 'Count mistakes when entering wrong values',
+  highlightRecoveryActionsOnMistake: 'Highlight undo and erase after mistakes',
   highContrast: 'Use high contrast board colors',
 }
 

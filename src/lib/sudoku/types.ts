@@ -46,5 +46,6 @@ export type AppSettings = {
   autoRemoveNotes: boolean
   highlightPeers: boolean
   autoCheckConflicts: boolean
+  highlightRecoveryActionsOnMistake: boolean
   highContrast: boolean
 }
