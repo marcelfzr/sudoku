@@ -40,9 +40,12 @@ export type GameStats = {
   lastCompletedDate: string | null
 }
 
+export type LanguageOverride = 'system' | 'en' | 'de'
+
 export type AppSettings = {
   themeMode: 'system' | 'light' | 'dark'
   defaultDifficulty: Difficulty
+  languageOverride: LanguageOverride
   autoRemoveNotes: boolean
   highlightPeers: boolean
   autoCheckConflicts: boolean

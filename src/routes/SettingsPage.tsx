@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { i18n, getBrowserPreferredLanguage } from '../i18n/i18n'
 import { loadSettings, saveSettings } from '../lib/storage/storage'
 import type { AppSettings, Difficulty } from '../lib/sudoku/types'
 import { applyThemeFromSettings } from '../lib/theme'
 
-const toggleSettingLabels: Record<
-  Exclude<keyof AppSettings, 'themeMode' | 'defaultDifficulty'>,
-  string
-> = {
-  autoRemoveNotes: 'Auto remove notes when entering a number',
-  highlightPeers: 'Highlight row, column, and box for selected cell',
-  autoCheckConflicts: 'Count mistakes when entering wrong values',
-  highlightRecoveryActionsOnMistake: 'Highlight undo and erase after mistakes',
-  highContrast: 'Use high contrast board colors',
-}
+const toggleSettingKeys = [
+  'autoRemoveNotes',
+  'highlightPeers',
+  'autoCheckConflicts',
+  'highlightRecoveryActionsOnMistake',
+  'highContrast',
+] as const
 
 const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
 
@@ -23,7 +22,7 @@ export function SettingsPage() {
     applyThemeFromSettings(settings)
   }, [settings])
 
-  const toggle = (key: Exclude<keyof AppSettings, 'themeMode' | 'defaultDifficulty'>) => {
+  const toggle = (key: (typeof toggleSettingKeys)[number]) => {
     const next = { ...settings, [key]: !settings[key] }
     setSettings(next)
     saveSettings(next)
@@ -41,13 +40,30 @@ export function SettingsPage() {
     saveSettings(next)
   }
 
+  const setLanguageOverride = (languageOverride: AppSettings['languageOverride']) => {
+    const next = { ...settings, languageOverride }
+    setSettings(next)
+    saveSettings(next)
+    const lng =
+      languageOverride === 'system' ? getBrowserPreferredLanguage() : languageOverride
+    i18n.changeLanguage(lng)
+  }
+
+  const { t } = useTranslation()
+
+  const languageOptions: Array<{ value: AppSettings['languageOverride']; labelKey: string }> = [
+    { value: 'system', labelKey: 'settings.languageSystem' },
+    { value: 'en', labelKey: 'settings.languageEn' },
+    { value: 'de', labelKey: 'settings.languageDe' },
+  ]
+
   return (
     <section className="panel stack-lg">
-      <h1>Settings</h1>
-      <p className="muted">Customize how the game feels on mobile and desktop.</p>
+      <h1>{t('settings.title')}</h1>
+      <p className="muted">{t('settings.subtitle')}</p>
 
-      <div className="theme-picker" role="radiogroup" aria-label="Theme mode">
-        <span className="muted">Theme</span>
+      <div className="theme-picker" role="radiogroup" aria-label={t('settings.themeModeA11y')}>
+        <span className="muted">{t('settings.theme')}</span>
         <div className="theme-options">
           {(['system', 'light', 'dark'] as const).map((mode) => (
             <button
@@ -58,14 +74,18 @@ export function SettingsPage() {
               role="radio"
               aria-checked={settings.themeMode === mode}
             >
-              {mode[0].toUpperCase() + mode.slice(1)}
+              {t(`settings.${mode}`)}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="theme-picker" role="radiogroup" aria-label="Default difficulty">
-        <span className="muted">Default difficulty</span>
+      <div
+        className="theme-picker"
+        role="radiogroup"
+        aria-label={t('settings.defaultDifficultyA11y')}
+      >
+        <span className="muted">{t('settings.defaultDifficulty')}</span>
         <div className="difficulty-options">
           {difficulties.map((difficulty) => (
             <button
@@ -76,24 +96,40 @@ export function SettingsPage() {
               role="radio"
               aria-checked={settings.defaultDifficulty === difficulty}
             >
-              {difficulty[0].toUpperCase() + difficulty.slice(1)}
+              {t(`difficulty.${difficulty}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="theme-picker" role="radiogroup" aria-label={t('settings.languageA11y')}>
+        <span className="muted">{t('settings.language')}</span>
+        <div className="theme-options">
+          {languageOptions.map(({ value, labelKey }) => (
+            <button
+              key={value}
+              type="button"
+              className={settings.languageOverride === value ? 'active' : ''}
+              onClick={() => setLanguageOverride(value)}
+              role="radio"
+              aria-checked={settings.languageOverride === value}
+            >
+              {t(labelKey)}
             </button>
           ))}
         </div>
       </div>
 
       <div className="settings-list">
-        {(Object.keys(toggleSettingLabels) as Array<
-          Exclude<keyof AppSettings, 'themeMode' | 'defaultDifficulty'>
-        >).map((key) => (
+        {toggleSettingKeys.map((key) => (
           <label className="setting-row" key={key}>
             <input
               type="checkbox"
               checked={settings[key]}
               onChange={() => toggle(key)}
-              aria-label={toggleSettingLabels[key]}
+              aria-label={t(`settings.${key}`)}
             />
-            <span>{toggleSettingLabels[key]}</span>
+            <span>{t(`settings.${key}`)}</span>
           </label>
         ))}
       </div>

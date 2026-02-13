@@ -1,4 +1,5 @@
 import { getBoxId, getPeers } from '../lib/sudoku/board'
+import { useTranslation } from 'react-i18next'
 import type { Board, CellValue } from '../lib/sudoku/types'
 
 type SudokuBoardProps = {
@@ -22,13 +23,14 @@ export function SudokuBoard({
   highlightPeers,
   onSelect,
 }: SudokuBoardProps) {
+  const { t } = useTranslation()
   const sameValue =
     selectedIndex !== null && values[selectedIndex] !== 0 ? values[selectedIndex] : null
   const peers = selectedIndex !== null ? new Set(getPeers(selectedIndex)) : new Set<number>()
   const selectedBox = selectedIndex !== null ? getBoxId(selectedIndex) : -1
 
   return (
-    <div className="board-grid" role="grid" aria-label="Sudoku board">
+    <div className="board-grid" role="grid" aria-label={t('a11y.sudokuBoard')}>
       {values.map((value, index) => {
         const isSelected = index === selectedIndex
         const isGiven = given[index] !== 0
@@ -56,7 +58,10 @@ export function SudokuBoard({
             type="button"
             role="gridcell"
             className={classes}
-            aria-label={`Cell ${Math.floor(index / 9) + 1}, ${(index % 9) + 1}`}
+            aria-label={t('a11y.cellPosition', {
+              row: Math.floor(index / 9) + 1,
+              col: (index % 9) + 1,
+            })}
             onClick={() => onSelect(index)}
           >
             {value === 0 ? (

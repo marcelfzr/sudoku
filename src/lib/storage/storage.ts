@@ -7,6 +7,7 @@ const STATS_KEY = 'sudoku:stats'
 const defaultSettings: AppSettings = {
   themeMode: 'system',
   defaultDifficulty: 'medium',
+  languageOverride: 'system',
   autoRemoveNotes: true,
   highlightPeers: true,
   autoCheckConflicts: true,

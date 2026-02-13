@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { GameToolbar } from '../components/GameToolbar'
 import { NumberPad } from '../components/NumberPad'
 import { SudokuBoard } from '../components/SudokuBoard'
@@ -31,6 +32,7 @@ type DailyGameProps = {
 }
 
 function DailyGame({ date }: DailyGameProps) {
+  const { t } = useTranslation()
   const settings = useMemo(() => loadSettings(), [])
   const difficulty = settings.defaultDifficulty
   const puzzle = useMemo(() => buildDailyPuzzle(date, difficulty), [date, difficulty])
@@ -107,19 +109,19 @@ function DailyGame({ date }: DailyGameProps) {
     <section className="game-page">
       <div className="panel game-header">
         <div className="row">
-          <h1>{date === formatDateKey(new Date()) ? 'Today' : date}</h1>
+          <h1>{date === formatDateKey(new Date()) ? t('daily.today') : date}</h1>
         </div>
         <p className="muted">
-          {puzzle.difficulty} · {puzzle.clueCount} clues
+          {t(`difficulty.${puzzle.difficulty}`)} · {t('home.clues', { count: puzzle.clueCount })}
         </p>
         <div className="game-stats">
-          <span>Time: {formatDuration(game.elapsedSeconds)}</span>
-          <span>Mistakes: {game.mistakes}</span>
-          <span>{game.notesMode ? 'Notes on' : 'Notes off'}</span>
+          <span>{t('daily.time')}: {formatDuration(game.elapsedSeconds)}</span>
+          <span>{t('daily.mistakes')}: {game.mistakes}</span>
+          <span>{game.notesMode ? t('daily.notesOn') : t('daily.notesOff')}</span>
         </div>
         {game.completed ? (
           <p className="success" role="status">
-            Puzzle solved. Nice run.
+            {t('daily.puzzleSolved')}
           </p>
         ) : null}
       </div>

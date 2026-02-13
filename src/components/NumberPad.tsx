@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 type NumberPadProps = {
   disabled: boolean
   disabledDigits: Set<number>
@@ -5,8 +7,10 @@ type NumberPadProps = {
 }
 
 export function NumberPad({ disabled, disabledDigits, onInput }: NumberPadProps) {
+  const { t } = useTranslation()
+
   return (
-    <div className="number-pad" aria-label="Number input">
+    <div className="number-pad" aria-label={t('a11y.numberInput')}>
       {Array.from({ length: 9 }, (_, index) => index + 1).map((digit) => (
         <button
           key={digit}
@@ -14,7 +18,7 @@ export function NumberPad({ disabled, disabledDigits, onInput }: NumberPadProps)
           className="number-key"
           onClick={() => onInput(digit)}
           disabled={disabled || disabledDigits.has(digit)}
-          aria-label={`Input ${digit}`}
+          aria-label={t('a11y.inputDigit', { digit })}
         >
           {digit}
         </button>

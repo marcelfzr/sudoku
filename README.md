@@ -13,6 +13,7 @@ A clean, fast Sudoku web app with daily puzzles. Built for both mobile and deskt
 - **Statistics Tracking** - Track completed games, streaks, and average completion times
 - **Auto-Save** - Game progress is automatically saved to local storage
 - **Theme Support** - Light and dark mode
+- **Multi-Language** - English and German (auto-detected from browser, override in Settings)
 - **Undo/Redo** - Full history navigation for moves
 - **Notes Mode** - Add pencil marks to cells
 - **Error Validation** - Instant feedback on conflicts
@@ -74,6 +75,9 @@ src/
 │   └── SudokuBoard.tsx
 ├── hooks/             # Custom React hooks
 │   └── useSudokuGame.ts
+├── i18n/              # Internationalization
+│   ├── i18n.ts        # i18n setup and language resolution
+│   └── locales/       # Translation files (en.ts, de.ts)
 ├── lib/               # Core logic and utilities
 │   ├── storage/       # LocalStorage management
 │   ├── sudoku/        # Puzzle generation, solving, validation
@@ -104,6 +108,20 @@ All game state, statistics, and settings are stored in browser `localStorage`:
 - Active game progress (board state, time, moves)
 - Completion statistics (games completed, streaks, times)
 - User settings (difficulty, theme preferences)
+
+## Adding a New Language
+
+To add a new language (e.g. French):
+
+1. **Create a locale file** at `src/i18n/locales/<lang>.ts` (e.g. `fr.ts`), exporting an object with the same key structure as `en.ts`. Use `en.ts` as a template.
+
+2. **Register the language** in `src/i18n/i18n.ts`:
+   - Add the language code to the `supportedLanguages` array
+   - Import the new locale and add it to the `resources` object in `i18n.init()`
+
+3. **Extend `LanguageOverride`** in `src/lib/sudoku/types.ts` to include the new language code (e.g. `'fr'`).
+
+4. **Add the Settings option** in `src/routes/SettingsPage.tsx`: add a new entry to the `languageOptions` array and add the corresponding label key (e.g. `settings.languageFr`) to each locale file.
 
 ## Development
 
